@@ -3,6 +3,12 @@ using System;
 
 namespace MassiveNumbers
 {
+    /*
+     * By Joseph Sak
+     * cyrogemgames.com
+     * Updated 11/4/25
+     */
+
     [System.Serializable]
     public struct Number
     {
@@ -37,7 +43,7 @@ namespace MassiveNumbers
                     negative = true;
                 }
                 long tttpo = LongExtensions.TenToThePowerOf(SignificantFigures + 1);
-                while(value >= tttpo)
+                while (value >= tttpo)
                 {
                     exponent++;
                     value /= 10;
@@ -50,7 +56,7 @@ namespace MassiveNumbers
                 }
                 trueValue = value;
             }
-        }    
+        }
         private long trueValue;
         /// <summary>
         /// Is the number negative
@@ -74,7 +80,8 @@ namespace MassiveNumbers
             {
                 Quantity *= -1;
                 negative = true;
-            } else
+            }
+            else
             {
                 negative = false;
             }
@@ -137,11 +144,12 @@ namespace MassiveNumbers
         public static Number operator + (Number n1, Number n2)
         {
             // First do we have a single negative? If so send it to subtraction
-            if(n1.negative && !n2.negative)
+            if (n1.negative && !n2.negative)
             {
                 n1.negative = false;
                 return (n2 - n1);
-            } else if (!n1.negative && n2.negative)
+            }
+            else if (!n1.negative && n2.negative)
             {
                 n2.negative = false;
                 return (n1 - n2);
@@ -161,14 +169,16 @@ namespace MassiveNumbers
             {
                 // The number coming in is so large our current number doesn't matter
                 return n1;
-            } else
+            }
+            else
             {   // Things are difficult and we actually have to math
                 Number n3, n4;
-                if(n1.Exponent > n2.Exponent)
+                if (n1.Exponent > n2.Exponent)
                 {
                     n3 = n2;
                     n4 = n1;
-                } else
+                }
+                else
                 {
                     n3 = n1;
                     n4 = n2;
@@ -196,13 +206,14 @@ namespace MassiveNumbers
             }
             // First check exponents
             if (n1.Exponent == n2.Exponent)
-            {            
-                if(n2.Multiplier > n1.Multiplier)
+            {
+                if (n2.Multiplier > n1.Multiplier)
                 {
                     n2.Multiplier -= n1.Multiplier;
                     n2.negative = true;
                     return n2;
-                }else
+                }
+                else
                 {
                     n1.Multiplier -= n2.Multiplier;
                     return n1;
@@ -221,13 +232,14 @@ namespace MassiveNumbers
             }
             else
             {   // Things are difficult and we actually have to math
-                if(n2.Exponent > n1.Exponent)
+                if (n2.Exponent > n1.Exponent)
                 {
                     // This should end up negative
                     n2.Multiplier -= LongExtensions.ReduceTenToThePowerOf(n1.Multiplier, n1.Exponent - n2.Exponent);
                     n2.negative = true;
                     return n2;
-                } else
+                }
+                else
                 {
                     // This should end up positive
                     n1.Multiplier -= LongExtensions.ReduceTenToThePowerOf(n2.Multiplier, n2.Exponent - n1.Exponent);
@@ -256,7 +268,7 @@ namespace MassiveNumbers
         {
             return n1 - One;
         }
-    
+
         public static Number operator * (Number n1, Number n2)
         {
             // If either value is zero, then the result is zero
@@ -309,11 +321,12 @@ namespace MassiveNumbers
             // If both numbers are negative then our expectations are reversed, remember this
             bool inversed = n1.negative && n2.negative;
             // Check exponents first
-            if (n1.Exponent == n2.Exponent || n2.exponent == -SignificantFigures)
+            if (n1.Exponent == n2.Exponent)
             {
                 if (inversed) return n1.Multiplier < n2.Multiplier;
                 return n1.Multiplier > n2.Multiplier;
-            } else
+            }
+            else
             {
                 if (inversed) return n1.Exponent < n2.Exponent;
                 return n1.Exponent > n2.Exponent;
@@ -329,7 +342,7 @@ namespace MassiveNumbers
             // If both numbers are negative then our expectations are reversed, remember this
             bool inversed = n1.negative && n2.negative;
             // Check exponents first
-            if (n1.Exponent == n2.Exponent || n2.exponent == -SignificantFigures)
+            if (n1.Exponent == n2.Exponent)
             {
                 if (inversed) return n1.Multiplier > n2.Multiplier;
                 return n1.Multiplier < n2.Multiplier;
@@ -363,7 +376,7 @@ namespace MassiveNumbers
             return n1 < n2 || n1 == n2;
         }
 
-        public static bool operator &(Number n1, Number n2)
+        public static bool operator & (Number n1, Number n2)
         {
             if (n1)
             {
@@ -398,12 +411,12 @@ namespace MassiveNumbers
             return false;
         }
 
-        public static bool operator true (Number n1)
+        public static bool operator true(Number n1)
         {
             return n1 != Zero;
         }
 
-        public static bool operator false (Number n1)
+        public static bool operator false(Number n1)
         {
             return n1 == Zero;
         }
@@ -471,7 +484,8 @@ namespace MassiveNumbers
                     }
                     if (negative) multiplier *= -1;
                     return new Number(multiplier, exponent);
-                } else
+                }
+                else
                 {
                     // There is no decimal point, we're done here
                     return multiplier;
@@ -612,7 +626,7 @@ namespace MassiveNumbers
             }
 
             // Now to parse the finalSuffix correctly, first I will append the end of it, this will remove any ending i's and any ending illi's
-            for(int i = finalSuffix.Length - 1; i >= 0; i--)
+            for (int i = finalSuffix.Length - 1; i >= 0; i--)
             {
                 if (finalSuffix[i] == 'i' || finalSuffix[i] == 'l' || finalSuffix[i] == 'a' || finalSuffix[i] == ' ') finalSuffix.Remove(i, 1);
                 else break;
@@ -740,7 +754,7 @@ namespace MassiveNumbers
             {
                 // Write these normally
                 return ToString();
-            }            
+            }
             StringBuilder sb = new StringBuilder(LongExtensions.ReduceTenToThePowerOf(Multiplier, -10).ToString());
             TwoDecimals(sb, negative);
             if (!engineeringNotation)
@@ -981,7 +995,7 @@ namespace MassiveNumbers
         /// <returns></returns>
         public static Number Abs(Number value)
         {
-            if(!value.Negative) value *= -1;
+            if (!value.Negative) value *= -1;
             return value;
         }
 
