@@ -6,7 +6,7 @@ namespace MassiveNumbers
     /*
      * By Joseph Sak
      * cyrogemgames.com
-     * Updated 11/4/25
+     * Updated 11/29/25
      */
 
     [System.Serializable]
@@ -457,7 +457,8 @@ namespace MassiveNumbers
             else if (double.IsPositiveInfinity(i)) i = double.MaxValue;
             else if (double.IsNegativeInfinity(i)) i = double.MinValue;
 
-            if (long.MaxValue >= i)
+            // Is this between a normal long
+            if (long.MaxValue >= i && long.MinValue <= i)
             {
                 int exponent = 0;
                 long multiplier = Convert.ToInt64(Math.Floor(i));
@@ -511,7 +512,7 @@ namespace MassiveNumbers
             else
             {
                 long exponent = 0;
-                while (i > long.MaxValue)
+                while (i > long.MaxValue || i < long.MinValue)
                 {
                     exponent++;
                     i /= 10;
@@ -551,6 +552,18 @@ namespace MassiveNumbers
         {
             if ((Number)double.MaxValue <= i) return i.Negative ? double.MinValue : double.MaxValue;
             return Math.Pow(10, i.Exponent) * i.Multiplier * (i.Negative ? -1 : 1);
+        }
+        public static Number FromBigInt(System.Numerics.BigInteger bigI)
+        {
+            if (bigI < (System.Numerics.BigInteger)double.MaxValue) return (Number)(double)bigI;
+            long exponent = 0;
+            System.Numerics.BigInteger maxLong = (System.Numerics.BigInteger)long.MaxValue / 100;
+            while (bigI > maxLong)
+            {
+                exponent += 8;
+                bigI /= 100000000;
+            }
+            return new Number((long)bigI, exponent);
         }
 
         #endregion
